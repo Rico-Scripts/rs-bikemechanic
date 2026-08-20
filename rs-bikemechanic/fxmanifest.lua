@@ -5,20 +5,24 @@ game 'gta5'
 lua54 'yes'
 
 author 'Rico Scripts'
-description 'RS Mechanic - ESX Motorcycle Mechanic + Dyno'
-version '4.0.2'
+description 'RS Mechanic - ESX Motorcycle Mechanic + Dyno + Moto Lift'
+version '4.1.0'
 
 shared_scripts {
 
     '@ox_lib/init.lua',
 
-    'config.lua'
+    'config.lua',
+
+    'lift_config.lua'
 
 }
 
 client_scripts {
 
-    'client/main.lua'
+    'client/main.lua',
+
+    'client/lift.lua'
 
 }
 
@@ -30,7 +34,9 @@ server_scripts {
 
     'server/vehicle_class_compat.lua',
 
-    'server/main.lua'
+    'server/main.lua',
+
+    'server/lift.lua'
 
 }
 
