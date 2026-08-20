@@ -1,0 +1,88 @@
+name: Install final Bike Mechanic PNG pack
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/workflows/install-png-pack.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          ref: main
+          fetch-depth: 0
+
+      - name: Install exact lore-friendly PNG pack
+        shell: bash
+        run: |
+          set -euo pipefail
+          test -s .github/assets/rs_inventory_pngs.zip
+          mkdir -p rs-bikemechanic/inventory_images
+          unzip -o .github/assets/rs_inventory_pngs.zip -d rs-bikemechanic/inventory_images
+
+      - name: Update ox_inventory mappings and documentation
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          from pathlib import Path
+
+          items = Path('rs-bikemechanic/ox_inventory_items.lua')
+          text = items.read_text(encoding='utf-8').replace('.svg', '.png')
+          items.write_text(text, encoding='utf-8')
+
+          readme = Path('rs-bikemechanic/README.md')
+          text = readme.read_text(encoding='utf-8')
+          text = text.replace('SVG-bestanden', 'PNG-bestanden')
+          text = text.replace('SVG bestanden', 'PNG bestanden')
+          text = text.replace('`.svg`', '`.png`')
+          text = text.replace('.svg', '.png')
+          readme.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Validate configured PNGs
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          base = Path('rs-bikemechanic/inventory_images')
+          items = Path('rs-bikemechanic/ox_inventory_items.lua').read_text(encoding='utf-8')
+          images = re.findall(r"image='([^']+)'", items)
+          assert len(images) == 17, f'Expected 17 item images, found {len(images)}'
+          missing = [name for name in images if not (base / name).is_file() or (base / name).stat().st_size == 0]
+          if missing:
+              raise SystemExit('Missing PNG files: ' + ', '.join(missing))
+          if any(not name.endswith('.png') for name in images):
+              raise SystemExit('A mapping is not PNG')
+          print('Validated 17 PNG inventory mappings.')
+          PY
+
+      - name: Remove old SVGs and temporary installer files
+        shell: bash
+        run: |
+          rm -f rs-bikemechanic/inventory_images/*.svg
+          rm -f .github/assets/rs_inventory_pngs.zip
+          rm -f .github/workflows/install-inventory-pngs.yml
+          rm -f .github/workflows/build-inventory-pngs.yml
+          rm -f .github/workflows/install-png-pack.yml
+
+      - name: Commit final PNG inventory pack to main
+        shell: bash
+        run: |
+          set -euo pipefail
+          git config user.name 'Rico Scripts Bot'
+          git config user.email 'actions@users.noreply.github.com'
+          git add -A
+          git commit -m 'feat: install lore-friendly PNG inventory icons'
+          git push origin HEAD:main
