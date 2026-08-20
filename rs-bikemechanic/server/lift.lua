@@ -1,10 +1,11 @@
 -- RS Bike Mechanic - Moto Lift server module
 
+local ESX = exports['es_extended']:getSharedObject()
 local liftStates = {}
 local cooldowns = {}
 
 local function playerAllowed(src)
-    local xPlayer = ESX and ESX.GetPlayerFromId and ESX.GetPlayerFromId(src)
+    local xPlayer = ESX.GetPlayerFromId(src)
     if not xPlayer or not xPlayer.job or xPlayer.job.name ~= Config.JobName then
         return false, 'Je bent geen RS Mechanic.'
     end
@@ -61,8 +62,7 @@ local function logLift(src, id, raised)
 end
 
 RegisterNetEvent('rs-bikemechanic:server:requestLiftStates', function()
-    local src = source
-    TriggerClientEvent('rs-bikemechanic:client:syncLifts', src, liftStates)
+    TriggerClientEvent('rs-bikemechanic:client:syncLifts', source, liftStates)
 end)
 
 RegisterNetEvent('rs-bikemechanic:server:setLiftState', function(id, raised)
