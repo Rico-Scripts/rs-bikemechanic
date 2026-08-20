@@ -13,7 +13,7 @@ Professionele standalone motorwerkplaats voor FiveM, gebouwd door **Rico Scripts
 - Turbo, ECU, sportuitlaat, race-remmen, transmissie en sportvering
 - Antilag, launch control en Stage 2 software
 - Eigen producten en ox_inventory items
-- Unieke inventory-afbeeldingen per onderdeel
+- 17 lore-friendly PNG inventory-afbeeldingen
 - Werkhistorie per voertuig
 - Koppeling met `rs-dyno`
 - Liberty Walk / moto workshop configuratie
@@ -42,12 +42,13 @@ ensure rs-bikemechanic
 1. Plaats de map `rs-bikemechanic` in je FiveM resources-map.
 2. Importeer `sql/install.sql` in de database.
 3. Voeg de items uit `ox_inventory_items.lua` toe aan de itemdefinities van ox_inventory.
-4. Kopieer de bestanden uit `inventory_images` naar `ox_inventory/web/images`.
+4. Kopieer alle `.png` bestanden uit `inventory_images` naar `ox_inventory/web/images`.
 5. Controleer `config.lua` en pas locaties, rangen, prijzen en services aan.
 6. Configureer indien gewenst de Discord webhooks.
-7. Restart de resource.
+7. Restart `ox_inventory` en daarna `rs-bikemechanic`.
 
 ```text
+restart ox_inventory
 restart rs-bikemechanic
 ```
 
@@ -124,7 +125,7 @@ Controleer in `config.lua` onder andere:
 
 ### Inventory-afbeeldingen ontbreken
 
-Controleer of de bestanden uit `inventory_images` in `ox_inventory/web/images` staan. De bestandsnaam moet exact overeenkomen met `client.image` in `ox_inventory_items.lua`.
+Controleer of de PNG-bestanden uit `inventory_images` rechtstreeks in `ox_inventory/web/images` staan. De bestandsnaam moet exact overeenkomen met `client.image` in `ox_inventory_items.lua`.
 
 ### Tablet opent niet
 
@@ -147,7 +148,7 @@ Controleer of `rs-dyno` gestart is voordat functies worden gebruikt die daarvan 
 ```text
 rs-bikemechanic/
 ├── client/
-├── inventory_images/
+├── inventory_images/        # 17 lore-friendly PNG icons
 ├── nui/
 │   ├── index.html
 │   ├── style.css
