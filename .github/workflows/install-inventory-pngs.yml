@@ -1,0 +1,71 @@
+name: Install lore-friendly inventory PNGs
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - '.github/assets/rs_inventory_pngs.zip'
+      - '.github/workflows/install-inventory-pngs.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  install-pngs:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install PNG inventory icons
+        shell: bash
+        run: |
+          set -euo pipefail
+          mkdir -p inventory_images
+          unzip -o .github/assets/rs_inventory_pngs.zip -d inventory_images
+
+          python3 - <<'PY'
+          from pathlib import Path
+
+          items = Path('rs-bikemechanic/ox_inventory_items.lua')
+          text = items.read_text(encoding='utf-8')
+          text = text.replace('.svg', '.png')
+          items.write_text(text, encoding='utf-8')
+
+          readme = Path('rs-bikemechanic/README.md')
+          text = readme.read_text(encoding='utf-8')
+          text = text.replace('SVG-bestanden', 'PNG-bestanden')
+          text = text.replace('SVG bestanden', 'PNG bestanden')
+          text = text.replace('SVG', 'PNG')
+          text = text.replace('.svg', '.png')
+          readme.write_text(text, encoding='utf-8')
+          PY
+
+      - name: Verify all configured images exist
+        shell: bash
+        run: |
+          python3 - <<'PY'
+          import re
+          from pathlib import Path
+
+          text = Path('rs-bikemechanic/ox_inventory_items.lua').read_text(encoding='utf-8')
+          images = re.findall(r"image='([^']+)'", text)
+          missing = [name for name in images if not (Path('inventory_images') / name).is_file()]
+          if missing:
+              raise SystemExit('Missing inventory PNGs: ' + ', '.join(missing))
+          print(f'Validated {len(images)} inventory PNG mappings.')
+          PY
+
+      - name: Commit generated inventory PNGs
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -- inventory_images/*.png rs-bikemechanic/ox_inventory_items.lua rs-bikemechanic/README.md
+          if git diff --cached --quiet; then
+            echo 'Nothing to commit.'
+            exit 0
+          fi
+          git commit -m 'feat: add lore-friendly PNG inventory icons'
+          git push origin HEAD:main
