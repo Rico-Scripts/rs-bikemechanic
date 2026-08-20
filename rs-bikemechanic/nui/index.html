@@ -1,0 +1,9 @@
+<!doctype html><html lang="nl"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Rico Scripts Bike Mechanic</title><style>html,body{margin:0;background:transparent!important}.hidden{display:none!important}</style><link rel="stylesheet" href="style.css"></head>
+<body><main id="tablet" class="tablet hidden"><section class="shell">
+<header><div><small>MOTO WORKSHOP</small><h1>Werkplaatstablet</h1><p id="identity"></p></div><div class="header-actions"><button id="duty"></button><button id="close">×</button></div></header>
+<section class="vehicle"><span>Kenteken <b id="plate">Geen motor</b></span><span>Motor <b id="engine">-</b></span><span>Carrosserie <b id="body">-</b></span></section>
+<nav><button data-tab="service">Service</button><button data-tab="upgrade">Upgrades</button><button data-tab="products">Producten</button><button data-tab="history">Historie</button><button id="employeeTab" data-tab="employees">Medewerkers</button></nav>
+<section id="cards" class="cards"></section><section id="history" class="list hidden"></section>
+<section id="employees" class="hidden"><div class="hire"><input id="hireId" type="number" placeholder="Server-ID"><button id="hire">Aannemen als leerling</button></div><div id="employeeList" class="list"></div></section>
+<div id="toast"></div>
+</section></main><script src="app.js"></script></body></html>
