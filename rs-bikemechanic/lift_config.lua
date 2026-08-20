@@ -1,5 +1,24 @@
 -- RS Bike Mechanic - Moto Lift configuration
 
+-- Compatibility: de inventory assets zijn PNG. Oude configverwijzingen worden
+-- hier centraal genormaliseerd zodat shop/service cards geen .svg meer vragen.
+local function normalizeImage(image)
+    if type(image) ~= 'string' then return image end
+    return image:gsub('%.svg$', '.png')
+end
+
+if Config.Shop and type(Config.Shop.items) == 'table' then
+    for _, item in ipairs(Config.Shop.items) do
+        item.image = normalizeImage(item.image)
+    end
+end
+
+if Config.Services and type(Config.Services) == 'table' then
+    for _, service in pairs(Config.Services) do
+        service.image = normalizeImage(service.image)
+    end
+end
+
 Config.MotoLift = {
     enabled = true,
 
