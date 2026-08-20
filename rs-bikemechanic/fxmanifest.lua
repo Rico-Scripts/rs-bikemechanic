@@ -6,7 +6,7 @@ lua54 'yes'
 
 author 'Rico Scripts'
 description 'RS Mechanic - ESX Motorcycle Mechanic + Dyno'
-version '4.0.1'
+version '4.0.2'
 
 shared_scripts {
 
@@ -27,6 +27,8 @@ server_scripts {
     '@oxmysql/lib/MySQL.lua',
 
     'server/duty_bridge.lua',
+
+    'server/vehicle_class_compat.lua',
 
     'server/main.lua'
 
