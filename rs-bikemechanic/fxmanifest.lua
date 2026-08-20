@@ -46,7 +46,9 @@ files {
 
     'nui/index.html',
 
-    'nui/**/*'
+    'nui/**/*',
+
+    'inventory_images/*.png'
 
 }
 
