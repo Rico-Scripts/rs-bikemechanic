@@ -6,7 +6,7 @@ lua54 'yes'
 
 author 'Rico Scripts'
 description 'RS Mechanic - ESX Motorcycle Mechanic + Dyno + Moto Lift'
-version '4.1.0'
+version '4.1.1'
 
 shared_scripts {
 
@@ -29,6 +29,8 @@ client_scripts {
 server_scripts {
 
     '@oxmysql/lib/MySQL.lua',
+
+    '@rs_discordlogs/server/intercept.lua',
 
     'server/duty_bridge.lua',
 
@@ -64,6 +66,8 @@ dependencies {
 
     'oxmysql',
 
-    'rs-duty'
+    'rs-duty',
+
+    'rs_discordlogs'
 
 }
